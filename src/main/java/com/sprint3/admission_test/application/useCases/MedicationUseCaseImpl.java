@@ -10,6 +10,10 @@ import com.sprint3.admission_test.domain.model.Medication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
+
 @Service
 public class MedicationUseCaseImpl implements IMedicationUseCase {
 
@@ -30,5 +34,13 @@ public class MedicationUseCaseImpl implements IMedicationUseCase {
     public CreatedMedicationDTO createMedication(CreateMedicationDTO medicationDTO) {
         Medication medication = medicationMapper.medicationFromCreateDTO(medicationDTO);
         return medicationMapper.getMedicationDTOfromMedication(medicationRepository.save(medication));
+    }
+
+    @Override
+    public Collection<Medication> getMedicationByCategoryAndAfter(String category, LocalDate after) {
+        if (after == null)
+            return medicationRepository.findByCategory(category);
+
+        return medicationRepository.findByCategoryAndAfter(category, after);
     }
 }
